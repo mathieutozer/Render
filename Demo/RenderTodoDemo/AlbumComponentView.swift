@@ -40,6 +40,23 @@ class AlbumComponentView: ComponentView {
 
   /// Constructs the component tree.
   override func construct() -> ComponentNodeType {
+
+    return ComponentNode<View>(props: [:]).configure { (view) in
+        view.style.flex = Flex.Max
+        view.style.alignSelf = .stretch
+        view.style.justifyContent = .center
+        view.style.flexDirection = .row
+    }.children([
+      ComponentNode<Label>(props: [
+            #keyPath(flexMargin): EdgeInsets(top: 4, left: 4, bottom: 4, right: 4),
+            #keyPath(Label.text): self.album?.title ?? "None",
+            #keyPath(Label.font): S.Typography.mediumBold,
+            #keyPath(Label.textColor): S.Color.black
+        ])
+      ])
+
+
+
     let size = self.referenceSize
     let imageView =
             // image view.

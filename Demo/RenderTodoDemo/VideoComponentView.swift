@@ -32,24 +32,29 @@ class VideoComponentView: StaticComponentView {
   /// Constructs the component tree.
   override func construct() -> ComponentNodeType {
 
-    let imageView =
-          ComponentNode<ImageView>().configure({ view in
-            view.image = self.video?.cover
-            view.style.alignItems = .center
-            view.style.dimensions.width = ~self.referenceSize.width
-            view.style.dimensions.height = (~self.referenceSize.width * 9)/16
-    
-          })
 
-    return ComponentNode<View>().configure({ view in
-      view.style.flexDirection = .column
-//      view.backgroundColor = S.Color.black
-      view.style.dimensions.width =  ~self.referenceSize.width
-
-    }).children  ([
-            imageView
+    return ComponentNode<View>().configure({ (view: View) in
+      view.style.flex = Flex.Max
+      view.style.alignSelf = .stretch
+      view.style.justifyContent = .center
+      view.style.flexDirection = .row
+    }).children([
+      DefaultButton().configure({ view in
+        //view.setTitle("FOO", for: .normal)
+      }),
+      DefaultButton().configure({ view in
+        //view.setTitle("BAR", for: .normal)
+      }),
+      DefaultButton().configure({ view in
+        //view.setTitle("BAZ", for: .normal)
+      })
       ])
-//      .children([
+
+//    return ComponentNode<View>().configure({ view in
+//      view.style.flexDirection = .column
+////      view.backgroundColor = S.Color.black
+//      view.style.dimensions.width =  ~self.referenceSize.width
+//    }).children = ([
 //
 //      ComponentNode<ImageView>().configure({ view in
 //        view.image = self.video?.cover
@@ -57,23 +62,22 @@ class VideoComponentView: StaticComponentView {
 //        view.style.dimensions.width = ~self.referenceSize.width
 //        view.style.dimensions.height = (~self.referenceSize.width * 9)/16
 //
-//      }).children([
+//      }).children = ([
 //
-//        ComponentNode<View>().configure({ view in
+//        ComponentNode<View>().configure { (view: View) in
 //          view.style.flex = Flex.Max
 //          view.style.alignSelf = .stretch
 //          view.style.justifyContent = .center
 //          view.style.flexDirection = .row
-//
-//        }).children([
+//        }).children = ([
 //          DefaultButton().configure({ view in
-//            view.setTitle("FOO", for: .normal)
+//            //view.setTitle("FOO", for: .normal)
 //          }),
 //          DefaultButton().configure({ view in
-//            view.setTitle("BAR", for: .normal)
+//            //view.setTitle("BAR", for: .normal)
 //          }),
 //          DefaultButton().configure({ view in
-//            view.setTitle("BAZ", for: .normal)
+//            //view.setTitle("BAZ", for: .normal)
 //          })
 //          ])
 //        ])
