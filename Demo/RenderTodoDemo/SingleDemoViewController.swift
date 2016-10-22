@@ -7,9 +7,13 @@
 //
 
 import Foundation
-import Render
+#if os(OSX)
+  import RendermacOS
+#else
+  import Render
+#endif
 
-class SingleDemoViewController: UIViewController {
+class SingleDemoViewController: ViewController {
 
   // The item list.
   var album = Album(featured: true)
@@ -23,27 +27,55 @@ class SingleDemoViewController: UIViewController {
 
   /// Called after the controller's view is loaded into memory.
   override func viewDidLoad() {
+    self.view.wantsLayer = true
     super.viewDidLoad()
     self.view.addSubview(self.component)
     self.toggleFeatured()
   }
 
+  #if os(OSX)
+  /// Called to notify the view controller that its view has just laid out its subviews.
+  override func viewDidLayout() {
+    self.render()
+  }
+
+//  override func loadView() {
+//    self.view = View(frame: .zero)
+//    self.view.wantsLayer = true
+//  }
+  #else
   /// Called to notify the view controller that its view has just laid out its subviews.
   override func viewDidLayoutSubviews() {
     self.render()
   }
+  #endif
 
+
+  #if os(OSX)
   func render(_ animated: Bool = false) {
-    if animated {
-      UIView.animate(withDuration: 0.3, animations: {
+    //if animated {
+      //View.animate(withDuration: 0.3, animations: {
         self.component.renderComponent()
-        self.component.center = self.view.center
-      })
-    } else {
-      self.component.renderComponent()
-      self.component.center = self.view.center
-    }
+        self.component.setCenter(self.view.getCenter())
+//      //})
+//    } else {
+//      self.component.renderComponent()
+//      self.component.center = self.view.center
+
   }
+  #else
+  func render(_ animated: Bool = false) {
+  if animated {
+  View.animate(withDuration: 0.3, animations: {
+  self.component.renderComponent()
+  self.component.center = self.view.center
+  })
+  } else {
+  self.component.renderComponent()
+  self.component.center = self.view.center
+  }
+  }
+  #endif
 
   /// Change the component state every 2 seconds.
   func toggleFeatured() {

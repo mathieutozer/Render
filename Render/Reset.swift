@@ -25,296 +25,302 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+#else
+  import UIKit
+#endif
 
 struct Reset {
 
-  fileprivate static let View = UIView()
-  fileprivate static func resetView(_ view: UIView, proto: UIView = Reset.View) {
-    view.backgroundColor = proto.backgroundColor
-    view.tintColor = proto.backgroundColor
-    view.accessibilityIdentifier = nil
-    view.alpha = proto.alpha
-    view.isHidden = proto.isHidden
-    view.mask = proto.mask
-    view.accessibilityHint = proto.accessibilityHint
-    view.accessibilityLabel = proto.accessibilityLabel
-    view.accessibilityTraits = proto.accessibilityTraits
-    view.isUserInteractionEnabled = proto.isUserInteractionEnabled
-    view.layer.borderWidth = proto.layer.borderWidth
-    view.layer.borderColor = proto.layer.borderColor
-    view.layer.shadowPath = proto.layer.shadowPath
-    view.layer.shadowColor = proto.layer.shadowColor
-    view.layer.shadowOffset = proto.layer.shadowOffset
-    view.layer.shadowRadius = proto.layer.shadowRadius
-    view.layer.shadowOpacity = proto.layer.shadowOpacity
-    view.layer.cornerRadius = proto.layer.cornerRadius
-    view.layer.masksToBounds = proto.layer.masksToBounds
+  fileprivate static let _View = View()
+  fileprivate static func resetView(_ view: View, proto: View = Reset._View) {
+//    view.backgroundColor = proto.backgroundColor
+//    view.tintColor = proto.backgroundColor
+//    view.accessibilityIdentifier = nil
+//    view.alpha = proto.alpha
+//    view.isHidden = proto.isHidden
+//    view.mask = proto.mask
+//    view.accessibilityHint = proto.accessibilityHint
+//    view.accessibilityLabel = proto.accessibilityLabel
+//    view.accessibilityTraits = proto.accessibilityTraits
+//    view.isUserInteractionEnabled = proto.isUserInteractionEnabled
+//    view.layer.borderWidth = proto.layer.borderWidth
+//    view.layer.borderColor = proto.layer.borderColor
+//    view.layer.shadowPath = proto.layer.shadowPath
+//    view.layer.shadowColor = proto.layer.shadowColor
+//    view.layer.shadowOffset = proto.layer.shadowOffset
+//    view.layer.shadowRadius = proto.layer.shadowRadius
+//    view.layer.shadowOpacity = proto.layer.shadowOpacity
+//    view.layer.cornerRadius = proto.layer.cornerRadius
+//    view.layer.masksToBounds = proto.layer.masksToBounds
     Reset.resetTargets(view)
   }
 
-  fileprivate static let Label = UILabel()
-  fileprivate static func resetLabel(_ label: UILabel) {
-    Reset.resetView(label, proto: Reset.Label)
-    label.backgroundColor = Reset.Label.backgroundColor
-    label.font = Reset.Label.font
-    label.textColor = Reset.Label.textColor
-    label.textAlignment = Reset.Label.textAlignment
-    label.numberOfLines = Reset.Label.numberOfLines
-    label.text = Reset.Label.text
-    label.attributedText = Reset.Label.attributedText
-    label.shadowColor = Reset.Label.shadowColor
-    label.shadowOffset = Reset.Label.shadowOffset
-    label.lineBreakMode = Reset.Label.lineBreakMode
-    label.highlightedTextColor = Reset.Label.highlightedTextColor
-    label.isHighlighted = Reset.Label.isHighlighted
-    label.isUserInteractionEnabled = Reset.Label.isUserInteractionEnabled
-    label.isEnabled = Reset.Label.isEnabled
-    label.adjustsFontSizeToFitWidth = Reset.Label.adjustsFontSizeToFitWidth
-    label.baselineAdjustment = Reset.Label.baselineAdjustment
-    label.minimumScaleFactor = Reset.Label.minimumScaleFactor
+  fileprivate static let _Label = Label()
+  fileprivate static func resetLabel(_ label: Label) {
+    Reset.resetView(label, proto: Reset._Label)
+    label.backgroundColor = Reset._Label.backgroundColor
+    label.font = Reset._Label.font
+    label.textColor = Reset._Label.textColor
+//    label.textAlignment = Reset._Label.textAlignment
+//    label.numberOfLines = Reset._Label.numberOfLines
+//    label.text = Reset._Label.text
+//    label.attributedText = Reset._Label.attributedText
+//    label.shadowColor = Reset._Label.shadowColor
+//    label.shadowOffset = Reset._Label.shadowOffset
+//    label.lineBreakMode = Reset._Label.lineBreakMode
+//    label.highlightedTextColor = Reset._Label.highlightedTextColor
+//    label.isHighlighted = Reset._Label.isHighlighted
+//    label.isUserInteractionEnabled = Reset._Label.isUserInteractionEnabled
+//    label.isEnabled = Reset._Label.isEnabled
+//    label.adjustsFontSizeToFitWidth = Reset._Label.adjustsFontSizeToFitWidth
+//    label.baselineAdjustment = Reset._Label.baselineAdjustment
+//    label.minimumScaleFactor = Reset._Label.minimumScaleFactor
     if #available(iOS 9.0, *) {
-      label.allowsDefaultTighteningForTruncation = Reset.Label.allowsDefaultTighteningForTruncation
+      label.allowsDefaultTighteningForTruncation = Reset._Label.allowsDefaultTighteningForTruncation
     } else {
       // Fallback on earlier versions
     }
     Reset.resetTargets(label)
   }
 
-  fileprivate static let TextField = UITextField()
-  fileprivate static func resetTextField(_ textField: UITextField) {
-    Reset.resetView(textField, proto: Reset.TextField)
-    textField.backgroundColor = Reset.TextField.backgroundColor
-    textField.font = Reset.TextField.font
-    textField.textColor = Reset.TextField.textColor
-    textField.textAlignment = Reset.TextField.textAlignment
-    textField.text = Reset.TextField.text
-    textField.attributedText = Reset.TextField.attributedText
-    textField.isHighlighted = Reset.Label.isHighlighted
-    textField.isUserInteractionEnabled = Reset.TextField.isUserInteractionEnabled
-    textField.isEnabled = Reset.TextField.isEnabled
-    textField.adjustsFontSizeToFitWidth = Reset.TextField.adjustsFontSizeToFitWidth
-    textField.borderStyle = Reset.TextField.borderStyle
-    textField.defaultTextAttributes = Reset.TextField.defaultTextAttributes
-    textField.placeholder = Reset.TextField.placeholder
-    textField.attributedPlaceholder = Reset.TextField.attributedPlaceholder
-    textField.clearsOnBeginEditing = Reset.TextField.clearsOnBeginEditing
-    textField.minimumFontSize = Reset.TextField.minimumFontSize
-    textField.background = Reset.TextField.background
-    textField.disabledBackground = Reset.TextField.disabledBackground
-    textField.allowsEditingTextAttributes = Reset.TextField.allowsEditingTextAttributes
-    textField.typingAttributes = Reset.TextField.typingAttributes
-    textField.clearButtonMode = Reset.TextField.clearButtonMode
-    textField.leftView = Reset.TextField.leftView
-    textField.leftViewMode = Reset.TextField.rightViewMode
-    textField.rightView = Reset.TextField.rightView
-    textField.rightViewMode = Reset.TextField.rightViewMode
-    textField.inputView = Reset.TextField.inputView
-    textField.inputAccessoryView = Reset.TextField.inputAccessoryView
-    textField.clearsOnInsertion = Reset.TextField.clearsOnInsertion
+  fileprivate static let _TextField = TextField()
+  fileprivate static func resetTextField(_ textField: TextField) {
+    Reset.resetView(textField, proto: Reset._TextField)
+    textField.backgroundColor = Reset._TextField.backgroundColor
+    textField.font = Reset._TextField.font
+    textField.textColor = Reset._TextField.textColor
+//    textField.textAlignment = Reset._TextField.textAlignment
+//    textField.text = Reset._TextField.text
+//    textField.attributedText = Reset._TextField.attributedText
+    textField.isHighlighted = Reset._Label.isHighlighted
+//    textField.isUserInteractionEnabled = Reset._TextField.isUserInteractionEnabled
+    textField.isEnabled = Reset._TextField.isEnabled
+//    textField.adjustsFontSizeToFitWidth = Reset._TextField.adjustsFontSizeToFitWidth
+//    textField.borderStyle = Reset._TextField.borderStyle
+//    textField.defaultTextAttributes = Reset._TextField.defaultTextAttributes
+//    textField.placeholder = Reset._TextField.placeholder
+//    textField.attributedPlaceholder = Reset._TextField.attributedPlaceholder
+//    textField.clearsOnBeginEditing = Reset._TextField.clearsOnBeginEditing
+//    textField.minimumFontSize = Reset._TextField.minimumFontSize
+//    textField.background = Reset._TextField.background
+//    textField.disabledBackground = Reset._TextField.disabledBackground
+    textField.allowsEditingTextAttributes = Reset._TextField.allowsEditingTextAttributes
+//    textField.typingAttributes = Reset._TextField.typingAttributes
+//    textField.clearButtonMode = Reset._TextField.clearButtonMode
+//    textField.leftView = Reset._TextField.leftView
+//    textField.leftViewMode = Reset._TextField.rightViewMode
+//    textField.rightView = Reset._TextField.rightView
+//    textField.rightViewMode = Reset._TextField.rightViewMode
+//    textField.inputView = Reset._TextField.inputView
+//    textField.inputAccessoryView = Reset._TextField.inputAccessoryView
+//    textField.clearsOnInsertion = Reset._TextField.clearsOnInsertion
     textField.delegate = nil
     Reset.resetTargets(textField)
   }
 
-  fileprivate static let TextView = UITextView()
-  fileprivate static func resetTextView(_ textView: UITextView) {
-    Reset.resetView(textView, proto: Reset.TextView)
-    textView.backgroundColor = Reset.TextView.backgroundColor
-    textView.font = Reset.TextView.font
-    textView.textColor = Reset.TextView.textColor
-    textView.textAlignment = Reset.TextView.textAlignment
-    textView.text = Reset.TextView.text
-    textView.attributedText = Reset.TextView.attributedText
-    textView.isUserInteractionEnabled = Reset.TextView.isUserInteractionEnabled
-    textView.allowsEditingTextAttributes = Reset.TextView.allowsEditingTextAttributes
-    textView.inputView = Reset.TextView.inputView
-    textView.inputAccessoryView = Reset.TextView.inputAccessoryView
-    textView.clearsOnInsertion = Reset.TextView.clearsOnInsertion
-    textView.isSelectable = Reset.TextView.isSelectable
-    textView.selectedRange = Reset.TextView.selectedRange
-    textView.isEditable = Reset.TextView.isEditable
-    textView.dataDetectorTypes = Reset.TextView.dataDetectorTypes
-    textView.allowsEditingTextAttributes = Reset.TextView.allowsEditingTextAttributes
-    textView.isScrollEnabled = Reset.TextView.isScrollEnabled
+  fileprivate static let _TextView = TextView()
+  fileprivate static func resetTextView(_ textView: TextView) {
+    Reset.resetView(textView, proto: Reset._TextView)
+    textView.backgroundColor = Reset._TextView.backgroundColor
+    textView.font = Reset._TextView.font
+    textView.textColor = Reset._TextView.textColor
+//    textView.textAlignment = Reset._TextView.textAlignment
+//    textView.text = Reset._TextView.text
+//    textView.attributedText = Reset._TextView.attributedText
+//    textView.isUserInteractionEnabled = Reset._TextView.isUserInteractionEnabled
+//    textView.allowsEditingTextAttributes = Reset._TextView.allowsEditingTextAttributes
+//    textView.inputView = Reset._TextView.inputView
+//    textView.inputAccessoryView = Reset._TextView.inputAccessoryView
+//    textView.clearsOnInsertion = Reset._TextView.clearsOnInsertion
+    textView.isSelectable = Reset._TextView.isSelectable
+    textView.selectedRange = Reset._TextView.selectedRange
+    textView.isEditable = Reset._TextView.isEditable
+//    textView.dataDetectorTypes = Reset._TextView.dataDetectorTypes
+//    textView.allowsEditingTextAttributes = Reset._TextView.allowsEditingTextAttributes
+//    textView.isScrollEnabled = Reset._TextView.isScrollEnabled
     textView.delegate = nil
     Reset.resetTargets(textView)
   }
 
-  fileprivate static let Button = UIButton()
-  fileprivate static func resetButton(_ button: UIButton) {
-    Reset.resetView(button, proto: Button)
-    if let title = button.titleLabel { Reset.resetLabel(title) }
-    if let image = button.imageView { Reset.resetImageView(image) }
-
-    button.backgroundColor = Reset.TextView.backgroundColor
-    button.setTitle(Reset.Button.title(for: .disabled), for: .disabled)
+  fileprivate static let _Button = Button()
+  fileprivate static func resetButton(_ button: Button) {
+    Reset.resetView(button, proto: _Button)
+//    if let title = button.titleLabel { Reset.resetLabel(title) }
+//    if let image = button.imageView { Reset.resetImageView(image) }
+//
+//    button.backgroundColor = Reset._TextView.backgroundColor
+//    button.setTitle(Reset._Button.title(for: .disabled), for: .disabled)
+//    if #available(iOS 9.0, *) {
+//      button.setTitle(Reset._Button.title(for: .focused), for: .focused)
+//    } else {
+//      // Fallback on earlier versions
+//    }
+//    button.setTitle(Reset._Button.title(for: .highlighted), for: .highlighted)
+//    button.setTitle(Reset._Button.title(for: UIControlState()), for: UIControlState())
+//    button.setTitle(Reset._Button.title(for: .reserved), for: .reserved)
+//    button.setTitle(Reset._Button.title(for: .selected), for: .selected)
+//
+//    button.setTitleColor(Reset._Button.titleColor(for: .disabled),
+//                         for: .disabled)
+//    if #available(iOS 9.0, *) {
+//      button.setTitleColor(Reset._Button.titleColor(for: .focused),
+//                           for: .focused)
+//    } else {
+//      // Fallback on earlier versions
+//    }
+//    button.setTitleColor(Reset._Button.titleColor(for: .highlighted),
+//                         for: .highlighted)
+//    button.setTitleColor(Reset._Button.titleColor(for: UIControlState()),
+//                         for: UIControlState())
+//    button.setTitleColor(Reset._Button.titleColor(for: .reserved),
+//                         for: .reserved)
+//    button.setTitleColor(Reset._Button.titleColor(for: .selected),
+//                         for: .selected)
+//
+//    button.setTitleShadowColor(Reset._Button.titleShadowColor(for: .disabled),
+//                               for: .disabled)
+//    if #available(iOS 9.0, *) {
+//      button.setTitleShadowColor(Reset._Button.titleShadowColor(for: .focused),
+//                                 for: .focused)
+//    } else {
+//      // Fallback on earlier versions
+//    }
+//    button.setTitleShadowColor(Reset._Button.titleShadowColor(for: .highlighted),
+//                               for: .highlighted)
+//    button.setTitleShadowColor(Reset._Button.titleShadowColor(for: UIControlState()),
+//                               for: UIControlState())
+//    button.setTitleShadowColor(Reset._Button.titleShadowColor(for: .reserved),
+//                               for: .reserved)
+//    button.setTitleShadowColor(Reset._Button.titleShadowColor(for: .selected),
+//                               for: .selected)
+//
+//    button.setImage(Reset._Button.image(for: .disabled), for: .disabled)
+//    if #available(iOS 9.0, *) {
+//      button.setImage(Reset._Button.image(for: .focused), for: .focused)
+//    } else {
+//      // Fallback on earlier versions
+//    }
+//    button.setImage(Reset._Button.image(for: .highlighted), for: .highlighted)
+//    button.setImage(Reset._Button.image(for: UIControlState()), for: UIControlState())
+//    button.setImage(Reset._Button.image(for: .reserved), for: .reserved)
+//    button.setImage(Reset._Button.image(for: .selected), for: .selected)
+//
+//    button.setBackgroundImage(Reset._Button.backgroundImage(for: .disabled),
+//                              for: .disabled)
     if #available(iOS 9.0, *) {
-      button.setTitle(Reset.Button.title(for: .focused), for: .focused)
+//      button.setBackgroundImage(Reset._Button.backgroundImage(for: .focused),
+                                //for: .focused)
     } else {
       // Fallback on earlier versions
     }
-    button.setTitle(Reset.Button.title(for: .highlighted), for: .highlighted)
-    button.setTitle(Reset.Button.title(for: UIControlState()), for: UIControlState())
-    button.setTitle(Reset.Button.title(for: .reserved), for: .reserved)
-    button.setTitle(Reset.Button.title(for: .selected), for: .selected)
-
-    button.setTitleColor(Reset.Button.titleColor(for: .disabled),
-                         for: .disabled)
-    if #available(iOS 9.0, *) {
-      button.setTitleColor(Reset.Button.titleColor(for: .focused),
-                           for: .focused)
-    } else {
-      // Fallback on earlier versions
-    }
-    button.setTitleColor(Reset.Button.titleColor(for: .highlighted),
-                         for: .highlighted)
-    button.setTitleColor(Reset.Button.titleColor(for: UIControlState()),
-                         for: UIControlState())
-    button.setTitleColor(Reset.Button.titleColor(for: .reserved),
-                         for: .reserved)
-    button.setTitleColor(Reset.Button.titleColor(for: .selected),
-                         for: .selected)
-
-    button.setTitleShadowColor(Reset.Button.titleShadowColor(for: .disabled),
-                               for: .disabled)
-    if #available(iOS 9.0, *) {
-      button.setTitleShadowColor(Reset.Button.titleShadowColor(for: .focused),
-                                 for: .focused)
-    } else {
-      // Fallback on earlier versions
-    }
-    button.setTitleShadowColor(Reset.Button.titleShadowColor(for: .highlighted),
-                               for: .highlighted)
-    button.setTitleShadowColor(Reset.Button.titleShadowColor(for: UIControlState()),
-                               for: UIControlState())
-    button.setTitleShadowColor(Reset.Button.titleShadowColor(for: .reserved),
-                               for: .reserved)
-    button.setTitleShadowColor(Reset.Button.titleShadowColor(for: .selected),
-                               for: .selected)
-
-    button.setImage(Reset.Button.image(for: .disabled), for: .disabled)
-    if #available(iOS 9.0, *) {
-      button.setImage(Reset.Button.image(for: .focused), for: .focused)
-    } else {
-      // Fallback on earlier versions
-    }
-    button.setImage(Reset.Button.image(for: .highlighted), for: .highlighted)
-    button.setImage(Reset.Button.image(for: UIControlState()), for: UIControlState())
-    button.setImage(Reset.Button.image(for: .reserved), for: .reserved)
-    button.setImage(Reset.Button.image(for: .selected), for: .selected)
-
-    button.setBackgroundImage(Reset.Button.backgroundImage(for: .disabled),
-                              for: .disabled)
-    if #available(iOS 9.0, *) {
-      button.setBackgroundImage(Reset.Button.backgroundImage(for: .focused),
-                                for: .focused)
-    } else {
-      // Fallback on earlier versions
-    }
-    button.setBackgroundImage(Reset.Button.backgroundImage(for: .highlighted),
-                              for: .highlighted)
-    button.setBackgroundImage(Reset.Button.backgroundImage(for: UIControlState()),
-                              for: UIControlState())
-    button.setBackgroundImage(Reset.Button.backgroundImage(for: .reserved),
-                              for: .reserved)
-    button.setBackgroundImage(Reset.Button.backgroundImage(for: .selected),
-                              for: .selected)
-
-    button.setAttributedTitle(Reset.Button.attributedTitle(for: .disabled),
-                              for: .disabled)
-    if #available(iOS 9.0, *) {
-      button.setAttributedTitle(Reset.Button.attributedTitle(for: .focused),
-                                for: .focused)
-    } else {
-      // Fallback on earlier versions
-    }
-    button.setAttributedTitle(Reset.Button.attributedTitle(for: .highlighted),
-                              for: .highlighted)
-    button.setAttributedTitle(Reset.Button.attributedTitle(for: UIControlState()),
-                              for: UIControlState())
-    button.setAttributedTitle(Reset.Button.attributedTitle(for: .reserved),
-                              for: .reserved)
-    button.setAttributedTitle(Reset.Button.attributedTitle(for: .selected),
-                              for: .selected)
+//    button.setBackgroundImage(Reset._Button.backgroundImage(for: .highlighted),
+//                              for: .highlighted)
+//    button.setBackgroundImage(Reset._Button.backgroundImage(for: UIControlState()),
+//                              for: UIControlState())
+//    button.setBackgroundImage(Reset._Button.backgroundImage(for: .reserved),
+//                              for: .reserved)
+//    button.setBackgroundImage(Reset._Button.backgroundImage(for: .selected),
+//                              for: .selected)
+//
+//    button.setAttributedTitle(Reset._Button.attributedTitle(for: .disabled),
+//                              for: .disabled)
+//    if #available(iOS 9.0, *) {
+//      button.setAttributedTitle(Reset._Button.attributedTitle(for: .focused),
+//                                for: .focused)
+//    } else {
+//      // Fallback on earlier versions
+//    }
+//    button.setAttributedTitle(Reset._Button.attributedTitle(for: .highlighted),
+//                              for: .highlighted)
+//    button.setAttributedTitle(Reset._Button.attributedTitle(for: UIControlState()),
+//                              for: UIControlState())
+//    button.setAttributedTitle(Reset._Button.attributedTitle(for: .reserved),
+//                              for: .reserved)
+//    button.setAttributedTitle(Reset._Button.attributedTitle(for: .selected),
+//                              for: .selected)
     Reset.resetTargets(button)
   }
 
-  fileprivate static let ImageView = UIImageView()
-  fileprivate static func resetImageView(_ imageView: UIImageView) {
-    Reset.resetView(imageView, proto: Reset.ImageView)
-    imageView.backgroundColor = Reset.ImageView.backgroundColor
-    imageView.image = Reset.ImageView.image
-    imageView.isHighlighted = Reset.ImageView.isHighlighted
-    imageView.highlightedImage = Reset.ImageView.highlightedImage
-    imageView.animationImages = Reset.ImageView.animationImages
-    imageView.highlightedAnimationImages = Reset.ImageView.highlightedAnimationImages
-    imageView.animationDuration = Reset.ImageView.animationDuration
-    imageView.animationRepeatCount = Reset.ImageView.animationRepeatCount
-    imageView.tintColor = Reset.ImageView.tintColor
+  fileprivate static let _ImageView = ImageView()
+  fileprivate static func resetImageView(_ imageView: ImageView) {
+    Reset.resetView(imageView, proto: Reset._ImageView)
+    //imageView.backgroundColor = Reset._ImageView.backgroundColor
+    imageView.image = Reset._ImageView.image
+    imageView.isHighlighted = Reset._ImageView.isHighlighted
+//    imageView.highlightedImage = Reset._ImageView.highlightedImage
+//    imageView.animationImages = Reset._ImageView.animationImages
+//    imageView.highlightedAnimationImages = Reset._ImageView.highlightedAnimationImages
+//    imageView.animationDuration = Reset._ImageView.animationDuration
+//    imageView.animationRepeatCount = Reset._ImageView.animationRepeatCount
+//    imageView.tintColor = Reset._ImageView.tintColor
     Reset.resetTargets(imageView)
   }
 
-  static func resetTargets(_ view: UIView?) {
+  static func resetTargets(_ view: View?) {
     guard let view = view else { return }
-    if let control = view as? UIControl {
-      for target in control.allTargets {
-        control.removeTarget(target, action: nil, for: .allEvents)
-      }
+    if let control = view as? Control {
+//      for target in control.allTargets {
+//        control.removeTarget(target, action: nil, for: .allEvents)
+//      }
     }
   }
 }
 
-extension UIView {
+extension View {
   func prepareForComponentReuse() {
     Reset.resetView(self)
   }
 }
 
-extension UILabel {
+extension Label {
   override func prepareForComponentReuse() {
     Reset.resetLabel(self)
   }
 }
 
-extension UITextField {
+#if os(iOS)
+extension TextField {
   override func prepareForComponentReuse() {
     Reset.resetTextField(self)
   }
 }
+#endif
 
-extension UITextView {
+extension TextView {
   override func prepareForComponentReuse() {
     Reset.resetTextView(self)
   }
 }
 
-extension UIButton {
+extension Button {
   override func prepareForComponentReuse() {
     Reset.resetButton(self)
   }
 }
 
-extension UIImageView {
+extension ImageView {
   override func prepareForComponentReuse() {
     Reset.resetImageView(self)
   }
 }
 
-extension FlexboxView where Self: UIView {
+extension FlexboxView where Self: View {
 
   /// content-size calculation for the scrollview should be applied after the layout
   /// This is called after the scroll view is rendered.
   /// TableViews and CollectionViews are excluded from this post-render pass
   func postRender() {
-    if let scrollView = self as? UIScrollView {
-      if let _ = self as? UITableView { return }
-      if let _ = self as? UICollectionView { return }
+    if let scrollView = self as? ScrollView {
+      if let _ = self as? TableView { return }
+      if let _ = self as? CollectionView { return }
       scrollView.postRender()
     }
   }
 }
 
-extension UIScrollView {
+extension ScrollView {
 
   fileprivate func postRender() {
     var x: CGFloat = 0
@@ -323,7 +329,7 @@ extension UIScrollView {
       x = subview.frame.maxX > x ? subview.frame.maxX : x
       y = subview.frame.maxY > y ? subview.frame.maxY : y
     }
-    self.contentSize = CGSize(width: x, height: y)
-    self.isScrollEnabled = true
+//    self.contentSize = CGSize(width: x, height: y)
+//    self.isScrollEnabled = true
   }
 }

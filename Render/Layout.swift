@@ -26,6 +26,9 @@
 //
 
 import Foundation
+#if os(OSX)
+import Layout
+#endif
 
 protocol CEnumTransformable {
 

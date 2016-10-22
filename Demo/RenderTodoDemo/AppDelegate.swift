@@ -6,7 +6,11 @@
 //  Copyright © 2016 Alex Usbergo. All rights reserved.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+#else
+  import UIKit
+#endif
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

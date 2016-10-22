@@ -11,8 +11,23 @@
 
 // JUST A BUNCH OF STYLE/APPEARANCE PROPERTIES.
 
-import UIKit
-import Render
+#if os(OSX)
+  import AppKit
+  public typealias Screen = NSScreen
+  public typealias Font = NSFont
+  public typealias Color = NSColor
+#else
+  import UIKit
+  public typealias Screen = UIScreen
+  public typealias Font = UIFont
+  public typealias Color = UIColor
+#endif
+
+#if os(OSX)
+  import RendermacOS
+#else
+  import Render
+#endif
 
 private var __ApperanceProxyHandle: UInt8 = 0
 
@@ -32,27 +47,27 @@ open class S {
 
     //MARK: marginInBetweenElements
     fileprivate var _marginInBetweenElements: CGFloat?
-    open func marginInBetweenElementsProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> CGFloat {
-      if let override = _marginInBetweenElements { return override }
-      if UIScreen.main.bounds.size.height < 480.0  {
-        return CGFloat(2.0)
-      }
-
-      return CGFloat(4.0)
-    }
+//    open func marginInBetweenElementsProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> CGFloat {
+//      if let override = _marginInBetweenElements { return override }
+//      if Screen.main.bounds.size.height < 480.0  {
+//        return CGFloat(2.0)
+//      }
+//
+//      return CGFloat(4.0)
+//    }
     open var marginInBetweenElements: CGFloat {
-      get { return self.marginInBetweenElementsProperty() }
+      get { return 2.0 }
       set { _marginInBetweenElements = newValue }
     }
 
     //MARK: margin
     fileprivate var _margin: CGFloat?
-    fileprivate func marginProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> CGFloat {
-      if let override = _margin { return override }
-      return CGFloat(16.0)
-    }
+//    fileprivate func marginProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> CGFloat {
+//      if let override = _margin { return override }
+//      return CGFloat(16.0)
+//    }
     open var margin: CGFloat {
-      get { return self.marginProperty() }
+      get { return 16 }
       set { _margin = newValue }
     }
   }
@@ -62,24 +77,24 @@ open class S {
   open class ColorAppearanceProxy {
 
     //MARK: black
-    fileprivate var _black: UIColor?
-    fileprivate func blackProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> UIColor {
-      if let override = _black { return override }
-      return UIColor(red: 0.156863, green: 0.156863, blue: 0.156863, alpha: 1.0)
-    }
-    open var black: UIColor {
-      get { return self.blackProperty() }
+    fileprivate var _black: Color?
+//    fileprivate func blackProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> Color {
+//      if let override = _black { return override }
+//      return UIColor(red: 0.156863, green: 0.156863, blue: 0.156863, alpha: 1.0)
+//    }
+    open var black: Color {
+      get { return .black }
       set { _black = newValue }
     }
 
     //MARK: white
-    fileprivate var _white: UIColor?
-    fileprivate func whiteProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> UIColor {
-      if let override = _white { return override }
-      return UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-    }
-    open var white: UIColor {
-      get { return self.whiteProperty() }
+    fileprivate var _white: Color?
+//    fileprivate func whiteProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> Color {
+//      if let override = _white { return override }
+//      return UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+//    }
+    open var white: Color {
+      get { return .white }
       set { _white = newValue }
     }
 
@@ -89,46 +104,46 @@ open class S {
   open class TypographyAppearanceProxy {
 
     //MARK: mediumBold
-    fileprivate var _mediumBold: UIFont?
-    fileprivate func mediumBoldProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> UIFont {
-      if let override = _mediumBold { return override }
-      return UIFont.systemFont(ofSize: 18.0, weight: UIFontWeightBold)
-    }
-    open var mediumBold: UIFont {
-      get { return self.mediumBoldProperty() }
+    fileprivate var _mediumBold: Font?
+//    fileprivate func mediumBoldProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> Font {
+//      if let override = _mediumBold { return override }
+//      return Font.systemFont(ofSize: 18.0, weight: UIFontWeightBold)
+//    }
+    open var mediumBold: Font {
+      get { return Font.systemFont(ofSize: 14) }
       set { _mediumBold = newValue }
     }
 
     //MARK: extraSmallLight
-    fileprivate var _extraSmallLight: UIFont?
-    fileprivate func extraSmallLightProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> UIFont {
-      if let override = _extraSmallLight { return override }
-      return UIFont.systemFont(ofSize: 12.0, weight: UIFontWeightLight)
-    }
-    open var extraSmallLight: UIFont {
-      get { return self.extraSmallLightProperty() }
+    fileprivate var _extraSmallLight: Font?
+//    fileprivate func extraSmallLightProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> Font {
+//      if let override = _extraSmallLight { return override }
+//      return Font.systemFont(ofSize: 12.0, weight: UIFontWeightLight)
+//    }
+    open var extraSmallLight: Font {
+      get { return Font.systemFont(ofSize: 14) }
       set { _extraSmallLight = newValue }
     }
 
     //MARK: medium
-    fileprivate var _medium: UIFont?
-    fileprivate func mediumProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> UIFont {
-      if let override = _medium { return override }
-      return UIFont.systemFont(ofSize: 18.0)
-    }
-    open var medium: UIFont {
-      get { return self.mediumProperty() }
+    fileprivate var _medium: Font?
+//    fileprivate func mediumProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> Font {
+//      if let override = _medium { return override }
+//      return Font.systemFont(ofSize: 18.0)
+//    }
+    open var medium: Font {
+      get { return Font.systemFont(ofSize: 14) }
       set { _medium = newValue }
     }
 
     //MARK: superSmallBold
-    fileprivate var _superSmallBold: UIFont?
-    fileprivate func superSmallBoldProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> UIFont {
-      if let override = _superSmallBold { return override }
-      return UIFont.systemFont(ofSize: 10.0, weight: UIFontWeightBold)
-    }
-    open var superSmallBold: UIFont {
-      get { return self.superSmallBoldProperty() }
+    fileprivate var _superSmallBold: Font?
+//    fileprivate func superSmallBoldProperty(_ traitCollection: UITraitCollection? = UIScreen.main.traitCollection) -> Font {
+//      if let override = _superSmallBold { return override }
+//      return Font.systemFont(ofSize: 10.0, weight: UIFontWeightBold)
+//    }
+    open var superSmallBold: Font {
+      get { return Font.systemFont(ofSize: 14) }
       set { _superSmallBold = newValue }
     }
   }

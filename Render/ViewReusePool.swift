@@ -25,7 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+#else
+  import UIKit
+#endif
 
 protocol ComponentViewWithReusePoolViewType: ComponentViewType {
 
@@ -37,11 +41,11 @@ protocol ComponentViewWithReusePoolViewType: ComponentViewType {
 class ComponentViewReusePool {
 
   /// The dictionary that stores the reusable views.
-  fileprivate var pool = [String: [UIView]]()
+  fileprivate var pool = [String: [View]]()
 
   /// Returns a view with the given reusable identifier (if available) and removes
   /// it from the pool.
-  func pop(_ identifier: String) -> UIView? {
+  func pop(_ identifier: String) -> View? {
     guard var array = self.pool[identifier] else { return nil }
     let view = array.popLast()
     self.pool[identifier] = array
@@ -49,19 +53,19 @@ class ComponentViewReusePool {
   }
 
   /// Adds a view to the reuse pool.
-  func push(_ identifier: String, view: UIView) {
+  func push(_ identifier: String, view: View) {
     if identifier == String(describing: type(of: view)) {
       return
     }
     Reset.resetTargets(view)
-    var array = self.pool[identifier] ?? [UIView]()
+    var array = self.pool[identifier] ?? [View]()
     array.append(view)
     self.pool[identifier] = array
   }
 
   /// Removes all the views from the reuse pool.
   func drain() {
-    self.pool = [String: [UIView]]()
+    self.pool = [String: [View]]()
   }
 
 }

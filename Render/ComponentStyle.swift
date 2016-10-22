@@ -25,20 +25,24 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+#else
+  import UIKit
+#endif
 
 public protocol ComponentStyleType {
 
   /// Applies the style to the view pased as argument.
   /// - parameter view: The target view.
-  func apply(in view: UIView)
+  func apply(in view: View)
 }
 
 public func +(lhs: ComponentStyleType, rhs: ComponentStyleType) -> ComponentStyleType {
   return CompoundComponentStyle(styles: [lhs, rhs])
 }
 
-public struct ComponentStyle<ViewType: UIView>: ComponentStyleType {
+public struct ComponentStyle<ViewType: View>: ComponentStyleType {
 
   // The associated cloure that applies the style to the target view.
   public let closure: (ViewType) -> Void
@@ -49,7 +53,7 @@ public struct ComponentStyle<ViewType: UIView>: ComponentStyleType {
 
   /// Applies the style to the view pased as argument.
   /// - parameter view: The target view.
-  public func apply(in view: UIView) {
+  public func apply(in view: View) {
     if let view = view as? ViewType {
       self.closure(view)
     }
@@ -68,14 +72,14 @@ public struct CompoundComponentStyle: ComponentStyleType {
 
   /// Applies the style to the view pased as argument.
   /// - parameter view: The target view.
-  public func apply(in view: UIView) {
+  public func apply(in view: View) {
     for style in self.styles {
       style.apply(in: view)
     }
   }
 }
 
-public extension UIView {
+public extension View {
 
   /// Apply the component style passed as argument.
   /// - parameter style: A component style object.

@@ -1,5 +1,5 @@
 //
-//  UIView+Flexbox.swift
+//  View+Flexbox.swift
 //  Render
 //
 //  Created by Alex Usbergo on 04/03/16.
@@ -25,17 +25,23 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+#else
+  import UIKit
+  public typealias EdgeInsets = UIEdgeInsets
+#endif
+
 
 //MARK: Layout
 
 public protocol FlexboxView { }
 
-extension FlexboxView where Self: UIView {
+extension FlexboxView where Self: View {
 
   /// Configure the view and its flexbox style.
   ///- Note: The configuration closure is stored away and called again in the render function
-  public func configure(_ closure: @escaping ((Self) -> Void), children: [UIView]? = nil) -> Self {
+  public func configure(_ closure: @escaping ((Self) -> Void), children: [View]? = nil) -> Self {
 
     //runs the configuration closure and stores it away
     closure(self)
@@ -53,7 +59,7 @@ extension FlexboxView where Self: UIView {
 
   /// Recursively apply the configuration closure to this view tree
   fileprivate func configure() {
-    func configure(_ view: UIView) {
+    func configure(_ view: View) {
 
       //runs the configure closure
       view.internalStore.configureClosure?()
@@ -74,7 +80,7 @@ extension FlexboxView where Self: UIView {
       return
     }
 
-    func postRender(_ view: UIView) {
+    func postRender(_ view: View) {
       view.postRender()
       view.subviews.forEach(postRender)
     }
@@ -89,7 +95,7 @@ extension FlexboxView where Self: UIView {
   }
 }
 
-extension UIView: FlexboxView {
+extension View: FlexboxView {
 
   /// The style for this flexbox node
   public var style: Style { return self.flexNode.style }
@@ -114,14 +120,23 @@ extension UIView: FlexboxView {
 
         newNode.measure = { (node, width, height) -> Dimension in
 
+          #if os(iOS)
           if self.isHidden ||  self.alpha < CGFloat(FLT_EPSILON) {
             return (0,0) //no size for an hidden element
           }
+          #endif
+          // TODO
+
 
           self.frame = CGRect.zero
           var size = CGSize.zero
 
+          #if os(OSX)
+          size = self.intrinsicContentSize // todo - this is probably not correct
+          #else
           size = self.sizeThatFits(CGSize(width: CGFloat(width), height: CGFloat(height)))
+          #endif
+
           if size.isZero {
             size = self.intrinsicContentSize
           }
@@ -183,7 +198,7 @@ extension UIView: FlexboxView {
   /// Recursively computes the layout of this view
   fileprivate func layout(_ bounds: CGSize = CGSize.undefined) {
 
-    func prepare(_ view: UIView) {
+    func prepare(_ view: View) {
       for subview in view.subviews where subview.hasFlexNode {
         prepare(subview)
       }
@@ -219,9 +234,9 @@ extension UIView: FlexboxView {
 class InternalViewStore {
 
   /// The associated view.
-  private weak var view: UIView?
+  private weak var view: View?
 
-  init(view: UIView) {
+  init(view: View) {
     self.view = view
     self._closure = { [weak self] in
       self?.applyProps()
@@ -256,17 +271,23 @@ class InternalViewStore {
       var target = value
 
       // Bridge to ObjC.
-      if let size = value as? CGSize { target = NSValue(cgSize: size) }
-      if let point = value as? CGPoint { target = NSValue(cgPoint: point) }
-      if let rect = value as? CGRect { target = NSValue(cgRect: rect) }
-      if let edge = value as? UIEdgeInsets { target = NSValue(uiEdgeInsets: edge) }
-
+      #if os(OSX)
+        if let size = value as? CGSize { target = NSValue(size: size) }
+        if let point = value as? CGPoint { target = NSValue(point: point) }
+        if let rect = value as? CGRect { target = NSValue(rect: rect) }
+        if let edge = value as? EdgeInsets { target = NSValue(edgeInsets: edge) }
+      #else
+        if let size = value as? CGSize { target = NSValue(cgSize: size) }
+        if let point = value as? CGPoint { target = NSValue(cgPoint: point) }
+        if let rect = value as? CGRect { target = NSValue(cgRect: rect) }
+        if let edge = value as? UIEdgeInsets { target = NSValue(uiEdgeInsets: edge) }
+      #endif
       self.view?.setValue(target, forKeyPath: keyPath)
     }
   }
 }
 
-extension UIView {
+extension View {
 
   /// Internal store for this view
   var internalStore: InternalViewStore {
@@ -298,7 +319,7 @@ func debugRenderTime(_ label: String, startTime: CFAbsoluteTime, threshold: CFAb
   }
 }
 
-extension UIView {
+extension View {
   public dynamic var flexDirection: Directive.FlexDirection {
     get { return self.style.flexDirection }
     set { self.style.flexDirection = newValue }
@@ -339,18 +360,18 @@ extension UIView {
     set { self.style.flex = ~(newValue) }
   }
 
-  public dynamic var flexMargin: UIEdgeInsets {
-    get { return UIEdgeInsets(withFlexInsets: self.style.margin) }
+  public dynamic var flexMargin: EdgeInsets {
+    get { return EdgeInsets(withFlexInsets: self.style.margin) }
     set { self.style.margin = newValue.toFlexInset(direction: self.style.flexDirection) }
   }
 
-  public dynamic var flexPadding: UIEdgeInsets {
-    get { return UIEdgeInsets(withFlexInsets: self.style.padding) }
+  public dynamic var flexPadding: EdgeInsets {
+    get { return EdgeInsets(withFlexInsets: self.style.padding) }
     set { self.style.padding = newValue.toFlexInset(direction: self.style.flexDirection) }
   }
 
-  public dynamic var flexBorder: UIEdgeInsets {
-    get { return UIEdgeInsets(withFlexInsets: self.style.border) }
+  public dynamic var flexBorder: EdgeInsets {
+    get { return EdgeInsets(withFlexInsets: self.style.border) }
     set { self.style.border = newValue.toFlexInset(direction: self.style.flexDirection) }
   }
 
@@ -385,7 +406,7 @@ extension UIView {
   }
 }
 
-extension UIEdgeInsets {
+extension EdgeInsets {
 
   /// Construct an UIEdgeInset from a Layout.Inset.
   init(withFlexInsets inset: Inset) {

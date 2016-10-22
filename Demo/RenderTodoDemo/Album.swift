@@ -7,8 +7,13 @@
 //
 
 import Foundation
+#if os(OSX)
+  import RendermacOS
+#else
+  import Render
+#endif
 
-private let covers = [UIImage(named: "cover")!]
+private let covers = [Image(named: "cover")!]
 
 private let titles = ["Aa"]
 
@@ -23,7 +28,7 @@ class Album: Equatable {
   let id = UUID().uuidString
   let title: String
   let artist: String
-  let cover: UIImage
+  let cover: Image
   var featured: Bool
 
   init(featured: Bool = false) {

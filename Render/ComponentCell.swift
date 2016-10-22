@@ -25,7 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+#else
+  import UIKit
+#endif
 
 public protocol ComponentCellType {
 
@@ -37,7 +41,7 @@ public protocol ComponentCellType {
 }
 
 /// Wraps a component inside a UITableViewCell.
-open class ComponentTableViewCell<C: ComponentViewType>: UITableViewCell, ComponentCellType {
+open class ComponentTableViewCell<C: ComponentViewType>: TableViewCell, ComponentCellType {
 
   /// The internal component.
   open var component: C?
@@ -51,9 +55,13 @@ open class ComponentTableViewCell<C: ComponentViewType>: UITableViewCell, Compon
       return
     }
     self.component = component()
-    if let view = self.component as? UIView {
+    if let view = self.component as? View {
+     #if os(OSX)
+      addSubview(view)
+     #else
       self.contentView.addSubview(view)
       self.clipsToBounds = true
+    #endif
     }
   }
 
@@ -67,27 +75,33 @@ open class ComponentTableViewCell<C: ComponentViewType>: UITableViewCell, Compon
     self.component?.renderComponent(withSize:
 
       size ?? self.superview?.bounds.size ?? CGSize.undefined)
-    if let view = self.component as? UIView {
-      self.contentView.frame = view.bounds
+    if let view = self.component as? View {
+      #if os(OSX)
+        self.frame = view.bounds
+      #else
+        self.contentView.frame = view.bounds
+      #endif
     }
   }
 
   /// Asks the view to calculate and return the size that best fits the specified size.
   /// - parameter size: The size for which the view should calculate its best-fitting size.
   /// - returns: A new size that fits the receiver’s subviews.
+  #if os(iOS)
   open override func sizeThatFits(_ size: CGSize) -> CGSize {
-    if let view = self.component as? UIView {
+    if let view = self.component as? View {
       let size = view.sizeThatFits(size)
       return size
     }
     return CGSize.zero
   }
+  #endif
 
   /// Returns the natural size for the receiving view, considering only properties of the view.
   /// - returns: A size indicating the natural size for the receiving view based on its 
   /// intrinsic properties.
   open override var intrinsicContentSize : CGSize {
-    if let view = self.component as? UIView {
+    if let view = self.component as? View {
       return view.intrinsicContentSize
     }
     return CGSize.zero
@@ -95,7 +109,7 @@ open class ComponentTableViewCell<C: ComponentViewType>: UITableViewCell, Compon
 }
 
 /// Wraps a component inside a UICollectionViewCell.
-open class ComponentCollectionViewCell<C: ComponentViewType>: UICollectionViewCell,
+open class ComponentCollectionViewCell<C: ComponentViewType>: CollectionViewCell,
                                                                 ComponentCellType {
 
   /// The internal component
@@ -110,9 +124,13 @@ open class ComponentCollectionViewCell<C: ComponentViewType>: UICollectionViewCe
       return
     }
     self.component = component
-    if let view = self.component as? UIView {
-      self.contentView.addSubview(view)
-      self.clipsToBounds = true
+    if let view = self.component as? View {
+      #if os(OSX)
+        view.addSubview(view)
+      #else
+        self.contentView.addSubview(view)
+        self.clipsToBounds = true
+      #endif
     }
   }
 
@@ -121,74 +139,122 @@ open class ComponentCollectionViewCell<C: ComponentViewType>: UICollectionViewCe
   /// intrinsic content size for this component.
   /// - parameter state: The (optional) state for this component.
   open func renderComponent(_ size: CGSize? = nil) {
+    #if os(OSX)
+      let superview = view.superview
+      let contentView = view
+    #else
+      let superview = self.superview
+      let contentView = self.contentView
+    #endif
     self.component?.renderComponent(withSize:
-      size ?? self.superview?.bounds.size ?? CGSize.undefined)
-    if let view = self.component as? UIView {
-      self.contentView.frame = view.bounds
+      size ?? superview?.bounds.size ?? CGSize.undefined)
+    if let view = self.component as? View {
+      contentView.frame = view.bounds
     }
   }
-
+  #if os(iOS)
   /// Asks the view to calculate and return the size that best fits the specified size.
   /// - parameter size: The size for which the view should calculate its best-fitting size.
   /// - returns: A new size that fits the receiver’s subviews.
   open override func sizeThatFits(_ size: CGSize) -> CGSize {
     self.renderComponent(size)
-    if let view = self.component as? UIView {
+    if let view = self.component as? View {
       let size = view.sizeThatFits(size)
       return size
     }
     return CGSize.zero
   }
+  #endif
 
   /// Returns the natural size for the receiving view, considering only properties of the 
   /// view itself.
   /// - returns: A size indicating the natural size for the receiving view based on its 
   /// intrinsic properties.
+  #if os(OSX)
+  open var intrinsicContentSize : CGSize {
+    if let view = self.component as? View {
+      return view.intrinsicContentSize
+    }
+    return CGSize.zero
+  }
+    #else
   open override var intrinsicContentSize : CGSize {
     if let view = self.component as? UIView {
       return view.intrinsicContentSize
     }
     return CGSize.zero
   }
+  #endif
+
 }
 
 //MARK: Extensions
 
-extension UITableView {
+extension TableView {
 
   /// Refreshes the component at the given index path.
   /// - parameter indexPath: The indexpath for the targeted component.
   public func renderComponent(atIndexPath indexPath: IndexPath) {
     self.beginUpdates()
-    self.reloadRows(at: [indexPath], with: .fade)
+    #if os(OSX)
+      self.reloadData() //todo
+    #else
+      self.reloadRows(at: [indexPath], with: .fade)
+    #endif
     self.endUpdates()
   }
+
+  #if os(OSX)
+  var visibleCells: [TableViewCell] {
+    let rect = enclosingScrollView?.contentView.visibleRect
+    let range = rows(in: rect!)
+    var cells = [NSTableCellView]()
+    for i in range.location...range.length {
+      //cells.append(rowView(atRow: i, makeIfNecessary: true) as NSTableCellView) todo
+    }
+    return cells
+  }
+  #endif
 
   /// Re-renders all the compoents currently visible on screen.
   /// - Note: Call this method whenever the table view changes its bounds/size.
   public func renderVisibleComponents() {
+
     for cell in self.visibleCells where cell is ComponentCellType {
       (cell as! ComponentCellType).renderComponent(CGSize.sizeConstraintToWidth(self.bounds.width))
     }
   }
 }
 
-extension UICollectionView {
+extension CollectionView {
 
   /// Refreshes the component at the given index path.
   /// - parameter indexPath: The indexpath for the targeted component.
   public func renderComponent(atIndexPath indexPath: IndexPath) {
-    self.performBatchUpdates({
-      self.reloadItems(at: [indexPath])
-      }, completion: nil)
+    #if os(OSX)
+      self.performBatchUpdates({
+        self.reloadItems(at: [indexPath])
+        }, completionHandler: nil)
+    #else
+      self.performBatchUpdates({
+        self.reloadItems(at: [indexPath])
+        }, completion: nil)
+    #endif
+
   }
 
   /// Re-renders all the compoents currently visible on screen.
   /// - Note: Call this method whenever the collection view changes its bounds/size.
   public func renderVisibleComponents() {
-    for cell in self.visibleCells where cell is ComponentCellType {
+    #if os(OSX)
+    for cell in self.visibleItems() {
       (cell as! ComponentCellType).renderComponent(CGSize.sizeConstraintToWidth(self.bounds.width))
     }
+    #else
+      for cell in self.visibleCells where cell is ComponentCellType {
+        (cell as! ComponentCellType).renderComponent(CGSize.sizeConstraintToWidth(self.bounds.width))
+      }
+    #endif
   }
 }
 
@@ -211,7 +277,7 @@ public struct ComponentPrototypes {
 
   /// Returns the size of the prototype wrapped in the view (CollectionView or TableView) 
   /// passed as argument
-  public static func prototypeComponentSize(_ referenceView: UIView,
+  public static func prototypeComponentSize(_ referenceView: View,
                                             reuseIdentifier: String,
                                             state: ComponentStateType) -> CGSize {
 
@@ -225,7 +291,7 @@ public struct ComponentPrototypes {
     component.renderComponent(withSize:
       CGSize.sizeConstraintToWidth(referenceView.bounds.size.width))
 
-    if let view = component as? UIView {
+    if let view = component as? View {
       return view.bounds.size
     } else {
       return CGSize.zero

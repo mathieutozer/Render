@@ -25,9 +25,66 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+  public typealias View = NSView
+  public typealias ViewController = NSViewController
+  public typealias TableView = NSTableView
+  public typealias CollectionView = NSCollectionView
+  public typealias ScrollView = NSScrollView
+  public typealias TableViewCell = NSTableCellView
+  public typealias CollectionViewCell = NSCollectionViewItem
+  public typealias TextView = NSTextView
+  public typealias Label = MTTextField
+  public typealias TextField = NSTextField
+  public typealias Button = NSButton
+  public typealias Control = NSControl
+  public typealias ImageView = NSImageView
+  public typealias Image = NSImage
 
-open class BaseComponentView: UIView, ComponentViewWithReusePoolViewType {
+#else
+  import UIKit
+  public typealias View = UIView
+  public typealias ViewController = UIViewController
+  public typealias TableView = UITableView
+  public typealias CollectionView = UICollectionView
+  public typealias TableViewCell = UITableViewCell
+  public typealias CollectionViewCell = UICollectionViewCell
+  public typealias ScrollView = UIScrollView
+  public typealias TextView = UITextView
+  public typealias Label = UILabel
+  public typealias TextField = UITextField
+  public typealias Button = UIButton
+  public typealias Control = UIControl
+  public typealias ImageView = UIImageView
+  public typealias Image = UIImage
+#endif
+
+
+#if os(OSX)
+  public class MTTextField : NSTextField {
+    public var text: String {
+      set {
+        self.stringValue = text
+      }
+      get {
+        return self.stringValue
+      }
+    }
+  }
+
+  public extension NSView {
+    public func setCenter(_ :CGPoint) {
+
+    }
+    public func getCenter() -> CGPoint {
+      return CGPoint(x: bounds.size.width / 2, y: bounds.size.height / 2)
+    }
+  }
+  
+#endif
+
+open class BaseComponentView: View, ComponentViewWithReusePoolViewType {
 
   public
   required init() {
@@ -83,8 +140,8 @@ open class BaseComponentView: UIView, ComponentViewWithReusePoolViewType {
   open  var state: ComponentStateType?
 
   /// The parent for this component
-  internal weak var _parentView: UIView?
-  open  var referenceView: UIView? {
+  internal weak var _parentView: View?
+  open  var referenceView: View? {
     get {
       return self._parentView ?? self.superview
     }

@@ -25,7 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+#else
+  import UIKit
+#endif
 
 /// The state used as input for the render function of the component.
 public protocol ComponentStateType {
@@ -65,7 +69,7 @@ public protocol ComponentViewType: class {
   /// (For example if the component is wrapped inside a cell, the parent view will be the 
   /// CollectionView).
   /// Use this as reference for size calculation.
-  weak var referenceView: UIView? { get set }
+  weak var referenceView: View? { get set }
 
   /// Render the component.
   /// - parameter size: The bounding box for this component. The default will determine the 

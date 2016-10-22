@@ -29,6 +29,7 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/alexdrone'
 
   s.ios.deployment_target = '8.0'
+  s.osx.deployment_target = '10.12'
 
   s.source_files = 'Render/**/*'
 

@@ -25,7 +25,11 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+#else
+  import UIKit
+#endif
 
 extension ComponentViewType {
 
@@ -52,8 +56,8 @@ extension ComponentViewType where Self: FlexboxComponentView {
 
     if !self.isRootInitialized { return }
 
-    var viewSet = Set<UIView>()
-    var reusedViewSet = Set<UIView>()
+    var viewSet = Set<View>()
+    var reusedViewSet = Set<View>()
     let reusePool = self.reusePool
 
     // visits the component tree and flags the useful existing views
@@ -70,7 +74,7 @@ extension ComponentViewType where Self: FlexboxComponentView {
     }
 
     // remove the views that are not necessary anymore from the hiearchy.
-    func prune(_ view: UIView) {
+    func prune(_ view: View) {
       if !viewSet.contains(view) {
         view.removeFromSuperview()
 
@@ -87,7 +91,7 @@ extension ComponentViewType where Self: FlexboxComponentView {
 
     // invoked from mount - attemps view reuse from a local shared pool.
     // - Note: Skipped when the UseReusePool configuration flag is 'false'
-    func reuse(_ view: UIView?, component: ComponentNodeType) {
+    func reuse(_ view: View?, component: ComponentNodeType) {
 
       guard let view = view , view.hasFlexNode else { return }
 
@@ -105,7 +109,7 @@ extension ComponentViewType where Self: FlexboxComponentView {
     }
 
     // - Note: Skipped when .UseReusePool is 'false'
-    func reuseCleanUp(_ view: UIView?) {
+    func reuseCleanUp(_ view: View?) {
 
       guard let view = view , view.hasFlexNode else { return }
 
@@ -118,13 +122,13 @@ extension ComponentViewType where Self: FlexboxComponentView {
     }
 
     // recursively adds the views that are not in the hierarchy to the hierarchy.
-    func mount(_ component: ComponentNodeType, parent: UIView) {
+    func mount(_ component: ComponentNodeType, parent: View) {
 
       if InfraConfiguration.useReusePool {
 
         // attemps view reuse from a local shared pool.
         if let reusableView = reusePool?.pop(component.reuseIdentifier) {
-          reusedViewSet = Set<UIView>()
+          reusedViewSet = Set<View>()
           reuse(reusableView, component: component)
           reuseCleanUp(reusableView)
         }
@@ -134,7 +138,17 @@ extension ComponentViewType where Self: FlexboxComponentView {
       component.build(reusableView: nil)
       if !component.mounted {
         component.renderedView!.internalStore.notAnimatable = true
-        parent.insertSubview(component.renderedView!, at: component.index)
+        #if os(OSX)
+          if parent.subviews.count > 0 {
+            parent.addSubview(component.renderedView!, positioned: .above, relativeTo: parent.subviews[component.index])
+          } else {
+            parent.addSubview(component.renderedView!)
+          }
+
+        #else
+          parent.insertSubview(component.renderedView!, at: component.index)
+        #endif
+
       }
       for child in component.children {
         mount(child, parent: component.renderedView!)
@@ -193,6 +207,7 @@ open class FlexboxComponentView: BaseComponentView {
     fatalError("unable to call 'renderComponent' on the internal abstract class '_ComponentView'.")
   }
 
+  #if os(iOS)
   /// Asks the view to calculate and return the size that best fits the specified size.
   /// - parameter size: The size for which the view should calculate its best-fitting size.
   /// - returns: A new size that fits the receiver’s subviews.
@@ -200,6 +215,8 @@ open class FlexboxComponentView: BaseComponentView {
     self.renderComponent(withSize: size)
     return self.bounds.size
   }
+  // todo - need to return intrinsic size?
+  #endif
 
   /// Returns the natural size for the receiving view, considering only properties of the view.
   /// - returns: A size indicating the natural size for the receiving view based on its

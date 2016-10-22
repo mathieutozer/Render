@@ -25,7 +25,12 @@
 //  THE SOFTWARE.
 //
 
-import UIKit
+#if os(OSX)
+  import AppKit
+#else
+  import UIKit
+#endif
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -91,8 +96,8 @@ public prefix func ~(size: CGSize) -> Dimension {
   return (width: ~size.width, height: ~size.height)
 }
 
-/// A shorthand to convert 'UIEdgeInsets' into 'Insets' for flexbox.
-public prefix func ~(insets: UIEdgeInsets) -> Inset {
+/// A shorthand to convert 'EdgeInsets' into 'Insets' for flexbox.
+public prefix func ~(insets: EdgeInsets) -> Inset {
   return (left: ~insets.left,
           top: ~insets.top,
           right: ~insets.right,
@@ -105,7 +110,7 @@ extension Node {
 
   /// Recursively apply the layout to the given view hierarchy.
   /// - parameter view: The root of the view hierarchy
-  func apply(_ view: UIView) {
+  func apply(_ view: View) {
 
     let x = layout.position.left.isNormal ? CGFloat(layout.position.left) : 0
     let y = layout.position.top.isNormal ? CGFloat(layout.position.top) : 0
@@ -117,14 +122,14 @@ extension Node {
 
     if let children = self.children {
       for (s, node) in zip(view.subviews, children) {
-        let subview = s as UIView
+        let subview = s as View
         node.apply(subview)
       }
     }
   }
 }
 
-extension UIView {
+extension View {
 
   /// Set the view frame to the one passed as argument.
   /// - Note: If the view is marked as notAnimatable (likely to be a newly inserted view)
@@ -132,26 +137,31 @@ extension UIView {
   func applyFrame(_ frame: CGRect) {
 
     // There's an ongoing animation
-    if self.internalStore.notAnimatable && self.layer.animationKeys()?.count > 0 {
+    #if os(OSX)
+      let layer = self.layer!
+    #else
+      let layer = self.layer
+    #endif
+    if self.internalStore.notAnimatable && layer.animationKeys()?.count > 0 {
 
       self.internalStore.notAnimatable = false
 
       // Get the duration of the ongoing animation
-      let duration = self.layer.animationKeys()?.map({
-        return self.layer.animation(forKey: $0)?.duration
+      let duration = layer.animationKeys()?.map({
+        return layer.animation(forKey: $0)?.duration
       }).reduce(0.0, {
         return max($0, Double($1 ?? 0.0))
       }) ?? 0
 
-      self.alpha = 0;
+      //self.alpha = 0;
       self.frame = frame
 
       // fades in the non-animatable views.
-      UIView.animate(withDuration: duration,
-                                 delay: duration,
-                                 options: [],
-                                 animations: { self.alpha = 1 },
-                                 completion: nil)
+//      View.animate(withDuration: duration,
+//                                 delay: duration,
+//                                 options: [],
+//                                 animations: { self.alpha = 1 },
+//                                 completion: nil)
       // Not animated
     } else {
       self.frame = frame
